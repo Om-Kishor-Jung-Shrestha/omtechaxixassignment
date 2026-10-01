@@ -55,6 +55,7 @@ mkdir -p /opt/appdatas
 chmod 755 /opt/collegeadmission
 chmod 755 /opt/collegeadmission/frontendenv
 chmod 755 /opt/collegeadmission/backendenv
-chmod 775 /opt/appdatas
+chown 10001:10001 /opt/appdatas
+chmod 750 /opt/appdatas
 
 echo "Application Server setup completed."
