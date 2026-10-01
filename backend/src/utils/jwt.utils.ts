@@ -41,7 +41,8 @@ export const JwtUtils = {
   },
 
   setCookies(res: Response, userId: string): void {
-    const isProd = process.env.NODE_ENV === 'production';
+    // const isProd = process.env.NODE_ENV === 'production';
+    const isProd = process.env.NODE_ENV === 'production' && process.env.COOKIE_SECURE === 'true';
     res.cookie('access_token', JwtUtils.signAccessToken(userId), {
       httpOnly: true,
       sameSite: 'lax',
