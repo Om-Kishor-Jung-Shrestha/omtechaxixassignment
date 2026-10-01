@@ -11,6 +11,6 @@ loki.source.journal "jenkins_controller" {
 
 loki.write "central" {
   endpoint {
-    url = "http://MONITORING_PRIVATE_IP:3100/loki/api/v1/push"
+    url = "http://10.0.1.141:3100/loki/api/v1/push"
   }
 }
