@@ -12,7 +12,7 @@ pipeline {
     parameters {
         string(
             name: 'APP_HOST',
-            defaultValue: 'REPLACE_WITH_APPLICATION_EC2_PUBLIC_IP',
+            defaultValue: '18.117.72.114',
             description: 'Public IP of Application EC2'
         )
     }
