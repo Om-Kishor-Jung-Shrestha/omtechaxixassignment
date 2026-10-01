@@ -1,0 +1,29 @@
+# AWS Configuration
+aws_region = "us-east-2"
+
+# Project Configuration
+project_name = "college-admission"
+environment  = "dev"
+
+# Existing AWS Key Pair
+key_pair_name = "omfinal"
+
+# SSH Access
+# Replace this example with your actual public IP.
+# /32 allows only one IPv4 address.
+ssh_allowed_cidr = "YOUR_PUBLIC_IP/32"
+
+# Network Configuration
+vpc_cidr            = "10.0.0.0/16"
+public_subnet_cidr  = "10.0.1.0/24"
+availability_zone   = "us-east-2a"
+
+# EC2 Instance Types
+jenkins_controller_instance_type = "t3.small"
+jenkins_agent_instance_type      = "t3.medium"
+application_instance_type        = "t3.medium"
+monitoring_instance_type         = "t3.small"
+
+# Storage Configuration
+root_volume_size = 30
+root_volume_type = "gp3"

@@ -1,0 +1,22 @@
+discovery.docker "application" {
+  host = "unix:///var/run/docker.sock"
+}
+
+loki.source.docker "application" {
+  host = "unix:///var/run/docker.sock"
+
+  targets = discovery.docker.application.targets
+
+  labels = {
+    job  = "college-admission",
+    host = "application",
+  }
+
+  forward_to = [loki.write.central.receiver]
+}
+
+loki.write "central" {
+  endpoint {
+    url = "http://MONITORING_PRIVATE_IP:3100/loki/api/v1/push"
+  }
+}

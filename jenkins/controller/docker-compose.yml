@@ -1,0 +1,26 @@
+services:
+  alloy:
+    image: grafana/alloy:latest
+    container_name: jenkins-controller-alloy
+    restart: unless-stopped
+
+    user: "0:0"
+
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/log/journal:/var/log/journal:ro
+      - /run/log/journal:/run/log/journal:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - alloy-data:/var/lib/alloy/data
+
+    ports:
+      - "12345:12345"
+
+volumes:
+  alloy-data:

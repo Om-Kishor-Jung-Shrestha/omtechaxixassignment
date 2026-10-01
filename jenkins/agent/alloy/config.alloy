@@ -1,0 +1,16 @@
+loki.source.journal "jenkins_agent" {
+  matches = "_COMM=java"
+
+  labels = {
+    job  = "jenkins",
+    host = "jenkins-agent",
+  }
+
+  forward_to = [loki.write.central.receiver]
+}
+
+loki.write "central" {
+  endpoint {
+    url = "http://MONITORING_PRIVATE_IP:3100/loki/api/v1/push"
+  }
+}

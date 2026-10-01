@@ -1,0 +1,3 @@
+window.__APP_CONFIG__ = {
+  GOOGLE_CLIENT_ID: "${VITE_GOOGLE_CLIENT_ID}"
+};

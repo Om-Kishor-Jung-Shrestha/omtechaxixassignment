@@ -1,0 +1,177 @@
+# ==========================================
+# Dependencies
+# ==========================================
+
+node_modules/
+*/node_modules/
+
+
+# ==========================================
+# Environment Variables / Secrets
+# ==========================================
+
+.env
+.env.*
+!.env.example
+
+
+# ==========================================
+# Build / Distribution
+# ==========================================
+
+dist/
+build/
+*/dist/
+*/build/
+
+
+# ==========================================
+# Logs
+# ==========================================
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# ==========================================
+# Uploads / User Generated Files
+# ==========================================
+
+uploads/
+*/uploads/
+
+storage/
+*/storage/
+
+public/uploads/
+*/public/uploads/
+
+
+# ==========================================
+# Testing / Coverage
+# ==========================================
+
+coverage/
+.nyc_output/
+
+
+# ==========================================
+# Vite
+# ==========================================
+
+.vite/
+
+
+# ==========================================
+# TypeScript
+# ==========================================
+
+*.tsbuildinfo
+
+
+# ==========================================
+# OS Files
+# ==========================================
+
+.DS_Store
+Thumbs.db
+
+
+# ==========================================
+# IDE / Editor
+# ==========================================
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+.idea/
+
+*.swp
+*.swo
+
+
+# ==========================================
+# Temporary Files
+# ==========================================
+
+tmp/
+temp/
+*.tmp
+
+
+# ==========================================
+# Environment / Local Database
+# ==========================================
+
+*.sqlite
+*.sqlite3
+
+
+
+# Terraform working directory
+.terraform/
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform variable files
+terraform.tfvars
+*.tfvars
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Terraform plans
+*.tfplan
+tfplan
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Sensitive SSH private keys
+*.pem
+*.key
+
+# AWS credentials
+.aws/
+credentials
+
+# Environment files
+.env
+.env.*
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+
+
+# Docker local overrides
+docker-compose.override.yml
+compose.override.yaml
+
+# Local environment directories
+frontendenv/
+backendenv/
+
+# Docker build context
+
+
+
+# Terraform local files
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/*.tfplan
