@@ -28,9 +28,7 @@ pipeline {
 
     environment {
 
-        DOCKERHUB_CREDENTIALS = 'dockerhub'
         SSH_CREDENTIALS = 'sshdevops'
-
 
         FRONTEND_IMAGE = 'om142/college-admission-frontend'
         BACKEND_IMAGE  = 'om142/college-admission-backend'
@@ -49,7 +47,6 @@ pipeline {
     stages {
 
 
-
         stage('Checkout') {
 
             steps {
@@ -64,7 +61,6 @@ pipeline {
                     ).trim()
 
                 }
-
 
                 echo "Building commit: ${env.IMAGE_TAG}"
             }
@@ -84,17 +80,15 @@ pipeline {
                 dir('backend') {
                     sh 'npm ci --legacy-peer-deps'
                 }
-
             }
         }
 
 
 
+
         stage('Lint') {
 
-
             parallel {
-
 
                 stage('Frontend Lint') {
 
@@ -107,7 +101,6 @@ pipeline {
                         }
 
                     }
-
                 }
 
 
@@ -123,11 +116,9 @@ pipeline {
                         }
 
                     }
-
                 }
 
             }
-
         }
 
 
@@ -136,14 +127,11 @@ pipeline {
 
         stage('Test') {
 
-
             steps {
 
-                echo 'Automated tests are not configured.'
-                echo 'Skipping tests.'
+                echo 'Tests skipped - not configured.'
 
             }
-
         }
 
 
@@ -152,12 +140,10 @@ pipeline {
 
         stage('Build') {
 
-
             parallel {
 
 
                 stage('Frontend Build') {
-
 
                     steps {
 
@@ -173,30 +159,21 @@ pipeline {
 
 
 
-
                 stage('Backend Build') {
-
 
                     steps {
 
-
                         dir('backend') {
-
 
                             sh 'npm run build'
 
-
                         }
-
 
                     }
 
-
                 }
 
-
             }
-
 
         }
 
@@ -205,18 +182,15 @@ pipeline {
 
 
 
+
         stage('Docker Build') {
 
-
             when {
-
                 branch 'main'
-
             }
 
 
             steps {
-
 
                 sh '''
 
@@ -226,6 +200,7 @@ pipeline {
                 -t ${FRONTEND_IMAGE}:${IMAGE_TAG} \
                 -t ${FRONTEND_IMAGE}:latest \
                 ./frontend
+
 
 
                 docker build \
@@ -238,8 +213,8 @@ pipeline {
 
             }
 
-
         }
+
 
 
 
@@ -249,11 +224,8 @@ pipeline {
 
         stage('Docker Push') {
 
-
             when {
-
                 branch 'main'
-
             }
 
 
@@ -263,13 +235,9 @@ pipeline {
                 withCredentials([
 
                     usernamePassword(
-
                         credentialsId: 'dockerhub',
-
                         usernameVariable: 'DOCKERHUB_USER',
-
                         passwordVariable: 'DOCKERHUB_TOKEN'
-
                     )
 
                 ]) {
@@ -277,24 +245,18 @@ pipeline {
 
                     sh '''
 
-                    printf '%s' "$DOCKERHUB_TOKEN" |
-
+                    echo "$DOCKERHUB_TOKEN" | \
                     docker login \
                     -u "$DOCKERHUB_USER" \
                     --password-stdin
 
 
-
                     docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}
-
                     docker push ${FRONTEND_IMAGE}:latest
 
 
-
                     docker push ${BACKEND_IMAGE}:${IMAGE_TAG}
-
                     docker push ${BACKEND_IMAGE}:latest
-
 
 
                     docker logout
@@ -318,17 +280,14 @@ pipeline {
 
 
             when {
-
                 branch 'main'
-
             }
-
 
 
             steps {
 
 
-                sshagent(credentials: [SSH_CREDENTIALS]) {
+                sshagent(credentials:[SSH_CREDENTIALS]) {
 
 
                     sh '''
@@ -336,10 +295,13 @@ pipeline {
                     set -e
 
 
-
                     ssh -o StrictHostKeyChecking=accept-new \
-                    ${APP_USER}@${APP_HOST} \
-                    "mkdir -p ${APP_DIR}"
+                    ${APP_USER}@${APP_HOST} "
+
+                    sudo mkdir -p ${APP_DIR} &&
+                    sudo chown -R ${APP_USER}:${APP_USER} ${APP_DIR}
+
+                    "
 
 
 
@@ -354,17 +316,22 @@ pipeline {
                     ssh -o StrictHostKeyChecking=accept-new \
                     ${APP_USER}@${APP_HOST} "
 
-                    cd ${APP_DIR} && \
+
+                    cd ${APP_DIR} &&
+
 
                     FRONTEND_IMAGE=${FRONTEND_IMAGE} \
                     BACKEND_IMAGE=${BACKEND_IMAGE} \
                     IMAGE_TAG=${IMAGE_TAG} \
-                    docker compose pull && \
+                    docker compose pull &&
+
+
 
                     FRONTEND_IMAGE=${FRONTEND_IMAGE} \
                     BACKEND_IMAGE=${BACKEND_IMAGE} \
                     IMAGE_TAG=${IMAGE_TAG} \
                     docker compose up -d --remove-orphans
+
 
                     "
 
@@ -395,19 +362,15 @@ pipeline {
 
 
             when {
-
                 branch 'main'
-
             }
-
 
 
 
             steps {
 
 
-                sshagent(credentials: [SSH_CREDENTIALS]) {
-
+                sshagent(credentials:[SSH_CREDENTIALS]) {
 
 
                     sh '''
@@ -415,24 +378,7 @@ pipeline {
                     set -e
 
 
-
-                    echo "Deploying Loki and Grafana..."
-
-
-
-                    ssh -o StrictHostKeyChecking=accept-new \
-                    ${MONITORING_USER}@${MONITORING_HOST} \
-                    "mkdir -p ${MONITORING_DIR}"
-
-
-
-
-                    scp -r \
-                    -o StrictHostKeyChecking=accept-new \
-                    monitoring \
-                    ${MONITORING_USER}@${MONITORING_HOST}:${MONITORING_DIR}/
-
-
+                    echo "Deploying Monitoring Stack"
 
 
 
@@ -440,13 +386,53 @@ pipeline {
                     ${MONITORING_USER}@${MONITORING_HOST} "
 
 
-                    cd ${MONITORING_DIR}/monitoring && \
+                    sudo mkdir -p ${MONITORING_DIR} &&
 
 
-                    echo 'GRAFANA_ADMIN_PASSWORD=admin123' > .env && \
+                    sudo chown -R ${MONITORING_USER}:${MONITORING_USER} ${MONITORING_DIR} &&
 
 
-                    docker compose up -d
+                    rm -rf ${MONITORING_DIR}/monitoring
+
+
+                    "
+
+
+
+
+
+                    echo "Copying monitoring files"
+
+
+
+                    scp -r \
+                    -o StrictHostKeyChecking=accept-new \
+                    ./monitoring \
+                    ${MONITORING_USER}@${MONITORING_HOST}:${MONITORING_DIR}/
+
+
+
+
+
+
+                    echo "Starting Loki Grafana"
+
+
+
+                    ssh -o StrictHostKeyChecking=accept-new \
+                    ${MONITORING_USER}@${MONITORING_HOST} "
+
+
+                    cd ${MONITORING_DIR}/monitoring &&
+
+
+                    echo 'GRAFANA_ADMIN_PASSWORD=admin123' > .env &&
+
+
+                    docker compose pull &&
+
+
+                    docker compose up -d --remove-orphans
 
 
                     "
@@ -461,20 +447,20 @@ pipeline {
 
 
 
+                    echo "Monitoring deployment completed"
+
+
                     '''
 
                 }
 
-
             }
-
 
         }
 
 
-
-
     }
+
 
 
 
@@ -490,13 +476,11 @@ pipeline {
         }
 
 
-
         failure {
 
             echo 'Pipeline failed.'
 
         }
-
 
 
         always {
@@ -505,8 +489,6 @@ pipeline {
 
         }
 
-
     }
-
 
 }
