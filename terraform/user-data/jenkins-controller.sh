@@ -68,10 +68,38 @@ apt-get install -y jenkins
 systemctl enable jenkins
 systemctl start jenkins
 
-# Allow Jenkins user to use Docker
+# Allow Jenkins and ubuntu users to use Docker
 usermod -aG docker jenkins
+usermod -aG docker ubuntu
+
+# Create Jenkins-related directories
+mkdir -p /opt/jenkins
+mkdir -p /var/lib/jenkins
+
+# Set Jenkins directory ownership
+chown -R jenkins:jenkins /opt/jenkins
+chown -R jenkins:jenkins /var/lib/jenkins
+
+# Set permissions for Jenkins directory
+chmod 755 /opt/jenkins
 
 # Restart Jenkins to apply Docker group membership
 systemctl restart jenkins
 
-echo "Jenkins Controller setup completed."
+# Verify installation
+echo "Checking Java..."
+java -version
+
+echo "Checking Docker..."
+docker --version
+
+echo "Checking Docker Compose..."
+docker compose version
+
+echo "Checking Jenkins service..."
+systemctl is-active jenkins
+
+echo "Checking Docker group..."
+getent group docker
+
+echo "Jenkins Controller setup completed successfully."

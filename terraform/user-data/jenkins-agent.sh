@@ -58,8 +58,18 @@ if ! id jenkins >/dev/null 2>&1; then
     useradd -m -s /bin/bash jenkins
 fi
 
-# Allow Jenkins user to access Docker
+# Add users to Docker group
+usermod -aG docker ubuntu
 usermod -aG docker jenkins
+
+# Create Jenkins workspace directory
+mkdir -p /home/jenkins/agent
+
+# Set Jenkins directory ownership
+chown -R jenkins:jenkins /home/jenkins
+
+# Set Ubuntu ownership of its home directory
+chown -R ubuntu:ubuntu /home/ubuntu
 
 # Verify installed software
 echo "Checking Java..."
@@ -79,5 +89,8 @@ node --version
 
 echo "Checking npm..."
 npm --version
+
+echo "Checking Docker group..."
+getent group docker
 
 echo "Jenkins Agent setup completed successfully."

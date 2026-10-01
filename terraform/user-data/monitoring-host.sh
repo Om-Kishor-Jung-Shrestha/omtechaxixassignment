@@ -47,6 +47,9 @@ apt-get install -y \
 systemctl enable docker
 systemctl start docker
 
+# Add ubuntu user to Docker group
+usermod -aG docker ubuntu
+
 # Create monitoring directory
 mkdir -p /opt/monitoring
 
@@ -54,7 +57,23 @@ mkdir -p /opt/monitoring
 mkdir -p /opt/monitoring/grafana
 mkdir -p /opt/monitoring/loki
 
-# Set directory permissions
-chmod 755 /opt/monitoring
+# Give ubuntu ownership of all monitoring files
+chown -R ubuntu:ubuntu /opt/monitoring
 
-echo "Monitoring Server setup completed."
+# Set directory permissions
+chmod -R 755 /opt/monitoring
+
+# Verify Docker installation
+echo "Checking Docker..."
+docker --version
+
+echo "Checking Docker Compose..."
+docker compose version
+
+echo "Checking Docker group..."
+getent group docker
+
+echo "Checking monitoring directory..."
+ls -ld /opt/monitoring
+
+echo "Monitoring Server setup completed successfully."

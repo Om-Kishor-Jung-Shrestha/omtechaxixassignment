@@ -47,14 +47,23 @@ apt-get install -y \
 systemctl enable docker
 systemctl start docker
 
+# Add ubuntu user to Docker group
+usermod -aG docker ubuntu
+
 # Create application directories
 mkdir -p /opt/collegeadmission/frontendenv
 mkdir -p /opt/collegeadmission/backendenv
 mkdir -p /opt/appdatas
-# Set directory permissions
+
+# Set application directory ownership
+chown -R ubuntu:ubuntu /opt/collegeadmission
+
+# Set application directory permissions
 chmod 755 /opt/collegeadmission
 chmod 755 /opt/collegeadmission/frontendenv
 chmod 755 /opt/collegeadmission/backendenv
+
+# Configure application data directory
 chown 10001:10001 /opt/appdatas
 chmod 750 /opt/appdatas
 
