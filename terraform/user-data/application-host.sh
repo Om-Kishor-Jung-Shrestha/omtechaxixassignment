@@ -47,10 +47,14 @@ apt-get install -y \
 systemctl enable docker
 systemctl start docker
 
-# Create application directory
-mkdir -p /opt/college-admission
-
+# Create application directories
+mkdir -p /opt/collegeadmission/frontendenv
+mkdir -p /opt/collegeadmission/backendenv
+mkdir -p /opt/appdatas
 # Set directory permissions
-chmod 755 /opt/college-admission
+chmod 755 /opt/collegeadmission
+chmod 755 /opt/collegeadmission/frontendenv
+chmod 755 /opt/collegeadmission/backendenv
+chmod 775 /opt/appdatas
 
 echo "Application Server setup completed."
