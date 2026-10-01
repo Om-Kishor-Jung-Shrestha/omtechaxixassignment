@@ -35,10 +35,18 @@ app.disable("x-powered-by");
 const PORT =
   process.env.PORT || 8000;
 
+// const allowedOrigins = [
+//   process.env.CLIENT_URL,
+//   "http://localhost:3000","http://localhost:5173",
+//   "http://127.0.0.1:3000",
+// ].filter(Boolean) as string[];
+
 const allowedOrigins = [
   process.env.CLIENT_URL,
-  "http://localhost:3000","http://localhost:5173",
+  "http://localhost:3000",
+  "http://localhost:5173",
   "http://127.0.0.1:3000",
+  "http://18.117.72.114",
 ].filter(Boolean) as string[];
 
 // ---------- Middleware ----------
