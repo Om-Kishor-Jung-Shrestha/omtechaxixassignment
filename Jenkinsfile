@@ -14,13 +14,13 @@ pipeline {
 
         string(
             name: 'APP_HOST',
-            defaultValue: '18.117.72.114',
+            defaultValue: '3.15.27.160',
             description: 'Public IP of Application EC2'
         )
 
         string(
             name: 'MONITORING_HOST',
-            defaultValue: '3.133.140.38',
+            defaultValue: '52.14.111.249',
             description: 'Public IP of Monitoring EC2'
         )
     }
